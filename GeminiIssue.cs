@@ -10,7 +10,7 @@ namespace Inedo.BuildMasterExtensions.Gemini
     /// Describes a Gemini issue.
     /// </summary>
     [Serializable]
-    public sealed class GeminiIssue : Issue
+    public sealed class GeminiIssue : IssueTrackerIssue
     {
         private static readonly Regex HtmlRemoverRegex = new Regex(@"<[^>]*>", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -19,10 +19,9 @@ namespace Inedo.BuildMasterExtensions.Gemini
         /// </summary>
         /// <param name="issue">The issue.</param>
         internal GeminiIssue(IssueEN issue)
-            : base(issue.IssueKey, issue.IssueStatusDesc, issue.IssueSummary, issue.IssueLongDesc, issue.FixedInVersionNumber)
+            : base(issue.IssueKey, issue.IssueStatusDesc, issue.IssueSummary, HttpUtility.HtmlDecode(HtmlRemoverRegex.Replace(issue.IssueLongDesc ?? string.Empty, "")), issue.FixedInVersionNumber)
         {
             this.IsClosed = issue.ClosedDate != default(DateTime);
-            this.IssueDescription = HttpUtility.HtmlDecode(HtmlRemoverRegex.Replace(issue.IssueLongDesc ?? string.Empty, ""));
         }
 
         /// <summary>

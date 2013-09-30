@@ -74,20 +74,20 @@ namespace Inedo.BuildMasterExtensions.Gemini
             }
         }
 
-        public override string GetIssueUrl(Issue issue)
+        public override string GetIssueUrl(IssueTrackerIssue issue)
         {
             int id = GetIssueId(issue.IssueId);
             return new Uri(new Uri(this.BaseUrl), string.Format(IssueUrlFormat, id)).ToString();
         }
 
-        public override Issue[] GetIssues(string releaseNumber)
+        public override IssueTrackerIssue[] GetIssues(string releaseNumber)
         {
             if (this.CategoryIdFilter == null || this.CategoryIdFilter.Length < 1 || string.IsNullOrEmpty(this.CategoryIdFilter[0]))
-                return new Issue[0];
+                return new IssueTrackerIssue[0];
 
             int projectId;
             if (!int.TryParse(this.CategoryIdFilter[0], out projectId))
-                return new Issue[0];
+                return new IssueTrackerIssue[0];
 
             var filter = CounterSoft.Gemini.Commons.Entity.IssuesFilterEN.CreateProjectFilter(-1, projectId);
             var issues = this.ServiceManager.IssuesService.GetFilteredIssues(filter);
@@ -96,7 +96,7 @@ namespace Inedo.BuildMasterExtensions.Gemini
                          .Select(i => new GeminiIssue(i))
                          .ToArray();
         }
-        public override bool IsIssueClosed(Issue issue)
+        public override bool IsIssueClosed(IssueTrackerIssue issue)
         {
             return ((GeminiIssue)issue).IsClosed;
         }
@@ -119,7 +119,7 @@ namespace Inedo.BuildMasterExtensions.Gemini
         {
             return "Connects to the CounterSoft Gemini issue tracking system.";
         }
-        public CategoryBase[] GetCategories()
+        public IssueTrackerCategory[] GetCategories()
         {
             return this.ServiceManager.ProjectsService.GetProjects().Select(p => new GeminiProject(p)).ToArray();
         }

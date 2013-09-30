@@ -8,7 +8,7 @@ namespace Inedo.BuildMasterExtensions.Gemini
     /// Describes a Gemini project.
     /// </summary>
     [Serializable]
-    public sealed class GeminiProject : CategoryBase
+    public sealed class GeminiProject : IssueTrackerCategory
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GeminiProject"/> class.
